@@ -36,8 +36,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         procps \
         unzip \
         zip \
+        sudo \
         vim \
     && rm -rf /var/lib/apt/lists/*
+
+# Non-root runtime user "halite", matching the host uid/gid (1000), with
+# passwordless sudo. Toolchain installs below run as root (they write to
+# /usr/local); the final USER switches the container to halite.
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+RUN groupadd -g ${GROUP_ID} halite \
+    && useradd -m -u ${USER_ID} -g halite -s /bin/bash halite \
+    && usermod -aG sudo halite \
+    && echo 'halite ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/halite \
+    && chmod 0440 /etc/sudoers.d/halite
 
 # Node 8.17.0 (required by webpack 3 and node-sass 4.5.3) via nvm
 ENV NVM_DIR=/usr/local/nvm
@@ -65,4 +77,5 @@ ENV PATH="$RBENV_ROOT/versions/2.5.9/bin:$PATH"
 RUN gem install bundler -v 1.16.0.pre.3
 
 WORKDIR /workspace
+USER halite
 CMD ["/bin/bash", "-c", "sleep infinity"]

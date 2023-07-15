@@ -3,7 +3,7 @@
   "dockerComposeFile": ["../compose.yaml"],
   "service": "dev",
   "workspaceFolder": "/workspace",
-  "remoteUser": "root",
+  "remoteUser": "halite",
   "shutdownAction": "stopCompose",
   "forwardPorts": [4000, 5000, 5001],
   "postCreateCommand": "bash /workspace/scripts/dev_setup.sh",

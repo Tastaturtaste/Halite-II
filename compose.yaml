@@ -20,6 +20,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.dev
     command: sleep infinity
+    user: "halite"
     environment:
       DATABASE_URL: mysql+pymysql://halite:halite@db:3306/halite
       FLASK_SECRET_KEY: dev-only-secret-change-me
