@@ -10,12 +10,48 @@ import os
 import zipfile
 
 
-ENVIRONMENT_DIR_HELP = "Directory containing precompiled Halite environment " \
-                       "executables, each named after their platform. "
+ENVIRONMENT_DIR_HELP = (
+    "Directory containing precompiled Halite environment "
+    "executables, each named after their platform. "
+)
 VERSION_HELP = "The version string to embed in the downloads page."
 IGNORED_EXTENSIONS = [".exe", ".class", ".pyc", ".obj"]
-INCLUDED_EXTENSIONS = [".py", ".java", ".cpp", ".hpp", ".cs", ".csproj", ".scala", ".js", ".sh", ".bat", ".toml", ".rs",".go",".txt",".rb", ".kt", ".clj",".jl", ".ml", ".hs", ".exs", ".ex", ".lock",".php", ".sln",".dart",".sbt",".properties",".swift",".pyx",".pxd",".fs",".fsproj"]
-INCLUDED_FILES = ["Makefile", "README", "REQUIRE","LANGUAGE","build.gradle"]
+INCLUDED_EXTENSIONS = [
+    ".py",
+    ".java",
+    ".cpp",
+    ".hpp",
+    ".cs",
+    ".csproj",
+    ".scala",
+    ".js",
+    ".sh",
+    ".bat",
+    ".toml",
+    ".rs",
+    ".go",
+    ".txt",
+    ".rb",
+    ".kt",
+    ".clj",
+    ".jl",
+    ".ml",
+    ".hs",
+    ".exs",
+    ".ex",
+    ".lock",
+    ".php",
+    ".sln",
+    ".dart",
+    ".sbt",
+    ".properties",
+    ".swift",
+    ".pyx",
+    ".pxd",
+    ".fs",
+    ".fsproj",
+]
+INCLUDED_FILES = ["Makefile", "README", "REQUIRE", "LANGUAGE", "build.gradle"]
 STARTER_KIT_DIR = "../airesources"
 DOWNLOAD_DATA = "_data/downloads.json"
 PLATFORM_AGNOSTIC = "None"
@@ -31,8 +67,30 @@ ENVIRONMENT_OUTPUT_FILE_FORMAT = "assets/downloads/Halite2_{platform}.zip"
 ALL_LANGUAGES_OUTPUT_FILE_FORMAT = "assets/downloads/Halite2_all_{platform}.zip"
 SOURCE_FILE = "assets/downloads/Halite2Source.zip"
 
-versions =  {"Python3" : "1.0", "C++" : "1.0", "Java" : "1.0", "CSharp" : "1.0" ,"JavaScript": "1.0",
-"ML-StarterBot-Python":"1.0", "Rust" : "1.0", "Scala" : "1.0", "Go" : "1.0", "Ruby" : "1.0-beta" , "Kotlin" : "0.9.0-beta", "Clojure" : "0.9.0-beta", "Julia" : "0.9.0-beta", "OCaml" : "0.9.0-beta", "Haskell" : "0.9.0-beta", "Elixir" : "0.9.0-beta", "PHP": "0.9.0-beta","Dart": "0.9.0-beta", "Swift": "0.9.0-beta",  "Cython3": "0.9.0-beta","FSharp": "0.9.0-beta",}
+versions = {
+    "Python3": "1.0",
+    "C++": "1.0",
+    "Java": "1.0",
+    "CSharp": "1.0",
+    "JavaScript": "1.0",
+    "ML-StarterBot-Python": "1.0",
+    "Rust": "1.0",
+    "Scala": "1.0",
+    "Go": "1.0",
+    "Ruby": "1.0-beta",
+    "Kotlin": "0.9.0-beta",
+    "Clojure": "0.9.0-beta",
+    "Julia": "0.9.0-beta",
+    "OCaml": "0.9.0-beta",
+    "Haskell": "0.9.0-beta",
+    "Elixir": "0.9.0-beta",
+    "PHP": "0.9.0-beta",
+    "Dart": "0.9.0-beta",
+    "Swift": "0.9.0-beta",
+    "Cython3": "0.9.0-beta",
+    "FSharp": "0.9.0-beta",
+    "Common-Lisp": "1.0",
+}
 
 
 def detect_environments(directory):
@@ -46,9 +104,9 @@ def detect_environments(directory):
             continue
 
         print("Detected platform", platform)
-        environments.append((platform,
-                             os.path.join(directory, filename),
-                             "halite" + platform_ext))
+        environments.append(
+            (platform, os.path.join(directory, filename), "halite" + platform_ext)
+        )
 
     return environments
 
@@ -78,7 +136,7 @@ def make_archive(output, environment, base_path, included_files):
             zinfo = zipfile.ZipInfo.from_file(source, target)
             zinfo.compress_type = zipfile.ZIP_DEFLATED
             zinfo.external_attr = 0o0100755 << 16
-            with open(source, 'rb') as source_file:
+            with open(source, "rb") as source_file:
                 archive.writestr(zinfo, source_file.read())
 
         for file in included_files:
@@ -93,11 +151,14 @@ def make_source_download():
         target_dir = os.path.relpath(directory, "../environment")
         for filename in file_list:
             _, ext = os.path.splitext(filename)
-            if ext.lower() in {".cpp", ".c", ".hpp", ".h", ".bat"} or \
-                    filename == "Makefile":
+            if (
+                ext.lower() in {".cpp", ".c", ".hpp", ".h", ".bat"}
+                or filename == "Makefile"
+            ):
                 source_path = os.path.join(directory, filename)
                 target_path = os.path.normpath(
-                    os.path.join("Halite/", target_dir, filename))
+                    os.path.join("Halite/", target_dir, filename)
+                )
 
                 included_files.append((source_path, target_path))
 
@@ -149,20 +210,22 @@ def main():
 
         all_files.extend(included_files)
 
-        for (platform, source, target) in environments:
+        for platform, source, target in environments:
             output = "./" + OUTPUT_FILE_FORMAT.format(
-                language=language, platform=platform)
+                language=language, platform=platform
+            )
             print("\tMaking:", output)
-            make_archive(output, (platform, source, target),
-                         full_path, included_files)
+            make_archive(output, (platform, source, target), full_path, included_files)
 
     panlanguage_kits = []
-    for (platform, source, target) in environments:
+    for platform, source, target in environments:
         # Make downloads including all languages
         filename = ALL_LANGUAGES_OUTPUT_FILE_FORMAT.format(platform=platform)
         all_output = "./" + filename
         print("\tMaking:", all_output)
-        make_archive(all_output, (platform, source, target), "../airesources", all_files)
+        make_archive(
+            all_output, (platform, source, target), "../airesources", all_files
+        )
         panlanguage_kits.append(filename)
 
         # Make downloads including no languages
@@ -182,27 +245,32 @@ def main():
     generated_languages.sort()
     for language in generated_languages:
         language_kits = []
-        for (platform, _, _) in environments:
+        for platform, _, _ in environments:
             language_kits.append(
-                OUTPUT_FILE_FORMAT.format(
-                    language=language, platform=platform))
+                OUTPUT_FILE_FORMAT.format(language=language, platform=platform)
+            )
 
-        output["languages"].append({
-            "language": language,
-            "files": language_kits,
-            "version": versions[language]
-        })
+        output["languages"].append(
+            {
+                "language": language,
+                "files": language_kits,
+                "version": versions[language],
+            }
+        )
 
-    output["languages"].append({
-        "language": "All Languages",
-        "files": panlanguage_kits,
-    })
+    output["languages"].append(
+        {
+            "language": "All Languages",
+            "files": panlanguage_kits,
+        }
+    )
 
-    for (platform, source, _) in environments:
+    for platform, source, _ in environments:
         if source is None:
             continue
         output["environments"].append(
-            ENVIRONMENT_OUTPUT_FILE_FORMAT.format(platform=platform))
+            ENVIRONMENT_OUTPUT_FILE_FORMAT.format(platform=platform)
+        )
 
     with open(DOWNLOAD_DATA, "w") as output_file:
         json.dump(output, output_file, indent=2)
