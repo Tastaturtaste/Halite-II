@@ -1,7 +1,7 @@
 # Build docker image on linux (or wsl), otherwise symlinks will not work correctly.
 # The resulting image can be used on windows.
 
-FROM ubuntu as base
+FROM ubuntu:22.04 as base
 # make ~/.profile available
 SHELL ["/bin/bash", "--login", "-c"]
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl ruby python2 nodejs ruby-dev build-essential libz-dev npm
