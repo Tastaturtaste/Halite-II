@@ -1,3 +1,5 @@
+import os
+
 from passlib.context import CryptContext
 
 # General coordinator settings
@@ -19,7 +21,7 @@ MAX_BOT_UPLOAD_SIZE = 20 * 1024 * 1024
 # Needs to match corresponding value in worker configuration
 MAX_COMPILED_BOT_UPLOAD_SIZE = 100 * 1024 * 1024
 # Secret key for Flask session cookies
-FLASK_SECRET_KEY = ""
+FLASK_SECRET_KEY = os.environ.get("FLASK_SECRET_KEY", "")
 # Where to look for API keys
 API_KEY_HEADER = "X-Api-Key"
 # What session cookie to use
@@ -48,15 +50,15 @@ WORKER_ARTIFACT_KEY = ""
 DATABASE_PROJECT_ID = ""
 DATABASE_REGION = ""
 DATABASE_INSTANCE_NAME = ""
-DATABASE_URL = ""
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
 
 # OAuth
-OAUTH_GITHUB_CONSUMER_KEY = ""
-OAUTH_GITHUB_CONSUMER_SECRET = ""
+OAUTH_GITHUB_CONSUMER_KEY = os.environ.get("OAUTH_GITHUB_CONSUMER_KEY", "")
+OAUTH_GITHUB_CONSUMER_SECRET = os.environ.get("OAUTH_GITHUB_CONSUMER_SECRET", "")
 
 # CORS setup
-SITE_URL = ""
-API_URL = ""
+SITE_URL = os.environ.get("SITE_URL", "")
+API_URL = os.environ.get("API_URL", "")
 CORS_ORIGINS = [SITE_URL]
 
 # API Key authentication

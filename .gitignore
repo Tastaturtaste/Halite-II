@@ -418,6 +418,9 @@ website/_data/*
 *.exe
 environment/halite
 worker/halite
+apiserver/worker/halite
+apiserver/worker/config.json
+apiserver/worker/worker-log-*.data
 git_pull.php
 
 *.zip

@@ -14,7 +14,16 @@ from . import util as web_util
 from .blueprint import web_api
 
 
-tld.update_tld_names()
+# The historical tld default source (mxr.mozilla.org) is dead; point at the
+# current public suffix list and never fail the import when offline.
+tld.conf.set_setting(
+    "NAMES_SOURCE_URL",
+    "https://publicsuffix.org/list/public_suffix_list.dat",
+)
+try:
+    tld.update_tld_names()
+except Exception:
+    pass
 
 
 def make_user_record(row, *, logged_in, total_users=None):

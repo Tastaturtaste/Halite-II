@@ -1,0 +1,10 @@
+.git
+**/node_modules
+**/vendor
+**/_site
+**/build
+environment/build
+apiserver/venv
+apiserver/worker/halite
+data
+*.log

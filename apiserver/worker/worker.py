@@ -51,7 +51,11 @@ RUNFILE = "run.sh"
 # and memory access. On the inside, we run the bot as a user so that it may
 # not overwrite files. The worker image has a built-in iptables rule denying
 # network access to this user as well.
-BOT_COMMAND = "cgexec -g cpu,memory,devices,cpuset:{cgroup} sudo -Hiu {bot_user} bash -c 'cd {bot_dir} && ./{runfile}'"
+BOT_COMMAND = (
+    "cgexec -g cpu,memory,devices,cpuset:{cgroup} sudo -Hiu {bot_user} bash -c 'cd {bot_dir} && ./{runfile}'"
+    if not util.UNSANDBOXED else
+    "cd {bot_dir} && ./{runfile}"
+)
 
 
 COMPILE_ERROR_MESSAGE = """
@@ -80,6 +84,8 @@ def makePath(path):
 
 def give_ownership(top_dir, group, dir_perms):
     """Give ownership of everything in a directory to a given group."""
+    if util.UNSANDBOXED:
+        return
     for dirpath, _, filenames in os.walk(top_dir):
         shutil.chown(dirpath, group=group)
         os.chmod(dirpath, dir_perms)
@@ -90,6 +96,9 @@ def give_ownership(top_dir, group, dir_perms):
 
 def rm_as_user(user, directory):
     """Remove a directory tree as the specified user."""
+    if util.UNSANDBOXED:
+        shutil.rmtree(directory, ignore_errors=True)
+        return
     subprocess.call(["sudo", "-H", "-u", user, "-s", "rm", "-rf", directory],
                     stderr=subprocess.PIPE,
                     stdout=subprocess.PIPE)
@@ -315,7 +324,7 @@ def health_check():
 def main():
     _set_logging()
     logging.info("Starting up worker at {}".format(socket.gethostname()))
-    threading.Thread(target=app.run, kwargs={'host':'0.0.0.0', 'port':5001, 'threaded':True}).start()
+    threading.Thread(target=app.run, kwargs={'host':'0.0.0.0', 'port':util.HEALTH_CHECK_PORT, 'threaded':True}).start()
     while True:
         set_time()
         try:

@@ -1,4 +1,14 @@
 import subprocess
+import json
+
+try:
+    with open("config.json") as _config_fh:
+        _config_data = json.load(_config_fh)
+        UNSANDBOXED = bool(_config_data.get("UNSANDBOXED", False))
+        HEALTH_CHECK_PORT = int(_config_data.get("HEALTH_CHECK_PORT", 5002))
+except Exception:
+    UNSANDBOXED = False
+    HEALTH_CHECK_PORT = 5002
 
 
 def kill_processes_as(user, process_name=None):
@@ -9,6 +19,8 @@ def kill_processes_as(user, process_name=None):
                          kill all of the user's processes.
     :return:
     """
+    if UNSANDBOXED:
+        return
     cmd_args = ["sudo", "-H", "-u", user, "-s",
                 "killall", "-9", "-u", user]
     if process_name is not None:
