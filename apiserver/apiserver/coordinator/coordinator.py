@@ -33,16 +33,14 @@ def task():
             if response:
                 return response
 
-        if config.COMPETITION_FINALS_PAIRING or config.COMPETITION_OPEN:
-            # Otherwise, play a game
-            # If the worker has a GPU, try really hard to give it some work to do
-            tries = 0
-            while tries == 0 or ((has_gpu or config.COMPETITION_FINALS_PAIRING)
-                                 and tries < 10):
-                response = serve_game_task(conn, has_gpu=has_gpu)
-                if response:
-                    return response
-                tries += 1
+        # Otherwise, play a game
+        # If the worker has a GPU, try really hard to give it some work to do
+        tries = 0
+        while tries == 0 or (has_gpu and tries < 10):
+            response = serve_game_task(conn, has_gpu=has_gpu)
+            if response:
+                return response
+            tries += 1
 
     return util.response_success({
         "type": "notask",
@@ -423,10 +421,7 @@ def update_rankings(conn, users):
     """
     users.sort(key=lambda user: user["rank"])
     # Set tau and draw_probability to more reasonable values than the defaults
-    if config.COMPETITION_FINALS_PAIRING:
-        trueskill.setup(tau=0.0, draw_probability=0.001)
-    else:
-        trueskill.setup(tau=0.008, draw_probability=0.001)
+    trueskill.setup(tau=0.008, draw_probability=0.001)
     teams = [[trueskill.Rating(mu=user["mu"], sigma=user["sigma"])]
              for user in users]
     new_ratings = trueskill.rate(teams)

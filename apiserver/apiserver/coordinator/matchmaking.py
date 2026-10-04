@@ -24,7 +24,7 @@ def rand_map_size():
 
 def serve_game_task(conn, has_gpu=False):
     """Try to find a set of players to play a game together."""
-    if not config.COMPETITION_FINALS_PAIRING and random.random() < 0.1:
+    if random.random() < 0.1:
         result = find_challenge(conn, has_gpu)
         if result:
             return result
@@ -35,34 +35,25 @@ def serve_game_task(conn, has_gpu=False):
     # If there is a GPU, only take bots from players who qualify for the GPU.
     # Else, do not run games for players who qualify for one.
     total_players = conn.execute(model.total_ranked_users).first()[0]
-    thresholds = util.tier_thresholds(total_players)
     ranked_users = model.ranked_users_query()
-    if config.COMPETITION_FINALS_PAIRING:
-        rank_limit = (ranked_users.c.rank <=
-                      thresholds[config.FINALS_TIER_NAME])
-    else:
-        rank_limit = sqlalchemy.sql.expression.true()
-
-    seed_filter = rank_limit
+    seed_filter = sqlalchemy.sql.expression.true()
     if config.ENFORCE_GPU_SEEDING:
         if has_gpu:
-            seed_filter = (rank_limit
-                          & (model.ranked_bots_users.c.is_gpu_enabled == True))
+            seed_filter = (model.ranked_bots_users.c.is_gpu_enabled == True)
         else:
-            seed_filter = (rank_limit
-                          & (model.ranked_bots_users.c.is_gpu_enabled == False))
+            seed_filter = (model.ranked_bots_users.c.is_gpu_enabled == False)
     elif not has_gpu:
         # Even if we don't require that GPU workers only receive games
         # seeded with GPU bots, we still don't want GPU bots to get
         # seeded on a non-GPU worker.
-        seed_filter = (rank_limit
-                       & (model.ranked_bots_users.c.is_gpu_enabled == False))
+        seed_filter = (model.ranked_bots_users.c.is_gpu_enabled == False)
 
     seed_player = find_seed_player(conn, ranked_users, seed_filter)
     if not seed_player and has_gpu:
         # If there isn't a gpu enabled seed, check for any seed to keep the
         # gpu worker busy
-        seed_player = find_seed_player(conn, ranked_users, rank_limit)
+        seed_player = find_seed_player(
+            conn, ranked_users, sqlalchemy.sql.expression.true())
     if not seed_player:
         return
 
@@ -102,7 +93,6 @@ def serve_game_task(conn, has_gpu=False):
         (model.bots.c.compile_status == model.CompileStatus.SUCCESSFUL.value) &
         (~((model.bots.c.user_id == seed_player["user_id"]) &
            (model.bots.c.id == seed_player["bot_id"]))) &
-        rank_limit &
         player_filter
     ).order_by(
         sqlalchemy.func.abs(model.bots.c.mu - seed_player["mu"])
@@ -397,60 +387,32 @@ def find_seed_player(conn, ranked_users, seed_filter):
     :param seed_filter: A WHERE clause to restrict player ranks.
     :return: A seed player, or None.
     """
-    if not config.COMPETITION_FINALS_PAIRING:
-        rand_value = random.random()
+    rand_value = random.random()
 
-        # Give 25% of games to least recently played new players
-        if rand_value > 0.75:
-            logging.info("Matchmaking: seed player: looking for random bot"
-                         " with under 400 games played that hasn't played"
-                         " recently")
-            result = find_idle_seed_player(conn, ranked_users, seed_filter,
-                                             restrictions=True)
-            if result:
-                return result
-        # Give 65% of games to lowest games played
-        # (also take any games where a seed isn't found above, almost certainly
-        #  because everyone is over 400 games)
-        if rand_value > 0.1:
-            logging.info("Matchmaking: seed player: looking for random bot"
-                         " with fewest games played")
-            result = find_newbie_seed_player(conn, ranked_users, seed_filter)
-            if result:
-                return result
-
-        # Give 10% of games to overall user who has least recently played
+    # Give 25% of games to least recently played new players
+    if rand_value > 0.75:
         logging.info("Matchmaking: seed player: looking for random bot"
-                     " that hasn't played recently")
+                     " with under 400 games played that hasn't played"
+                     " recently")
         result = find_idle_seed_player(conn, ranked_users, seed_filter,
-                                         restrictions=False)
+                                       restrictions=True)
         if result:
             return result
-    else:
-        # For finals: take 15 players with least games played, and select one
-        total_players = conn.execute(model.total_ranked_users).first()[0]
-        thresholds = util.tier_thresholds(total_players)
 
-        least_played = sqlalchemy.sql.select([
-            model.ranked_bots_users.c.user_id,
-            model.ranked_bots_users.c.bot_id,
-            model.ranked_bots_users.c.username,
-            model.ranked_bots_users.c.rank,
-            ranked_users.c.rank.label("player_rank"),
-            model.ranked_bots_users.c.mu,
-            model.ranked_bots_users.c.num_submissions.label("version_number"),
-        ]).select_from(
-            model.ranked_bots_users.join(
-                ranked_users,
-                (model.ranked_bots_users.c.user_id == ranked_users.c.user_id) &
-                seed_filter
-            )
-        ).where(
-            model.bots.c.compile_status == model.CompileStatus.SUCCESSFUL.value
-        ).order_by(model.bots.c.games_played.asc()).limit(15).alias("least_played")
+    # Give 65% of games to lowest games played
+    # (also take any games where a seed isn't found above, almost certainly
+    # because everyone is over 400 games)
+    if rand_value > 0.1:
+        logging.info("Matchmaking: seed player: looking for random bot"
+                     " with fewest games played")
+        result = find_newbie_seed_player(conn, ranked_users, seed_filter)
+        if result:
+            return result
 
-        query = least_played.select().order_by(
-            sqlalchemy.sql.func.rand()
-        ).limit(1)
-
-        return conn.execute(query).first()
+    # Give 10% of games to overall user who has least recently played
+    logging.info("Matchmaking: seed player: looking for random bot"
+                 " that hasn't played recently")
+    result = find_idle_seed_player(conn, ranked_users, seed_filter,
+                                   restrictions=False)
+    if result:
+        return result

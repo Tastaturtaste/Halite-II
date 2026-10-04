@@ -112,7 +112,6 @@ def validate_bot_submission():
 @web_api.route("/user/<int:intended_user>/bot", methods=["POST"])
 @util.cross_origin(methods=["POST"])
 @api_util.requires_login(accept_key=True, association=True)
-@api_util.requires_competition_open
 def create_user_bot(intended_user, *, user_id):
     if user_id != intended_user:
         raise api_util.user_mismatch_error(
@@ -142,7 +141,6 @@ def create_user_bot(intended_user, *, user_id):
 @web_api.route("/user/<int:intended_user>/bot/<int:bot_id>", methods=["PUT"])
 @util.cross_origin(methods=["GET", "PUT"])
 @api_util.requires_login(accept_key=True, association=True)
-@api_util.requires_competition_open
 def store_user_bot(user_id, intended_user, bot_id):
     """Store an uploaded bot in object storage."""
     if user_id != intended_user:
@@ -187,7 +185,6 @@ def store_user_bot(user_id, intended_user, bot_id):
 
 @web_api.route("/user/<int:intended_user>/bot/<int:bot_id>", methods=["DELETE"])
 @api_util.requires_login(accept_key=True, admin=True)
-@api_util.requires_competition_open
 def delete_user_bot(intended_user, bot_id, *, user_id):
     if user_id != intended_user:
         raise api_util.user_mismatch_error(

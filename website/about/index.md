@@ -12,7 +12,7 @@ This year’s challenge, Halite II, has a space theme, where players’ bots con
  
 The Halite competition is a fun way to learn and apply AI, machine learning, and other advanced algorithms by writing smart bots in a collaborative, challenging game setting. Designed for coding enthusiasts of all levels of experience and open to the public, Halite has created an engaging game environment to learn, write, and visualize code in action.  Halite was created as a [Two Sigma open source project](http://opensource.twosigma.com){:target="_blank"} for community outreach and education.
  
-The 2017-2018 season runs October- January, with participants able to join up until the last week of the competition. Players will submit bots that play games against other bots until the Halite ranking algorithm determines a player rank. After submissions are complete, a winner will be determined through a week of final matches.
+The 2017-2018 season runs October- January, with participants able to join up until the last week of the competition. Players will submit bots that play games against other bots until the Halite ranking algorithm determines a player rank.
 
 > The general who wins the battle makes many calculations in his temple before the battle is fought
 >

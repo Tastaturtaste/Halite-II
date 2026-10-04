@@ -39,9 +39,6 @@ In Halite 1, submitting a new version of a bot would reset that bot's rank. In H
 ## TIERS
 We assign you a tier based on your current rank.  Tiers are by percentile: the top 1/512 players are considered Diamond; the next 1/256 are considered Platinum, then the next 1/128 are Gold, 1/64 are Silver, and the rest are Bronze. You will move from tier to tier as your rank changes.
 
-## FINALS
-At midnight on January 22nd, we will close submissions and let the final bots play each other for the last week of January. We will announce final winners on January 29th based on the final scores at that point in time and will freeze scores. We may also decide that Bronze level bots (or any other bot) will stop playing earlier than 29th if we need the bandwidth to play more games for top bots in the last few days. Stay tuned for updates.
-
 ## PRIZES
 Prizes for this contest are bragging rights and some awesome Halite trophies and sweatshirts for top bots. In addition, Two Sigma will waive first round interviews for all users ranked Gold and above at the end of the contest. [Learn more here](two-sigma-recruiting). And we’ll be announcing the results of the competition with a link to the top players’ Github profiles and/or blogs (please do blog!).
 

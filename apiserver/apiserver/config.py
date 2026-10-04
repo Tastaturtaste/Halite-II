@@ -2,11 +2,6 @@ import os
 
 from passlib.context import CryptContext
 
-# General coordinator settings
-COMPETITION_OPEN = True
-# Original PHP: "compState", "finalsPairing"
-COMPETITION_FINALS_PAIRING = False
-
 # Max number of games a bot version can error out in before being
 # stopped from playing
 MAX_ERRORS_PER_BOT = 50
@@ -111,9 +106,6 @@ TIER_3_PERCENT = 1/64
 TIER_4_NAME = "Bronze"
 # What tier a player must be in to be eligible for GPUs
 GPU_TIER_NAME = TIER_2_NAME
-
-# What tier a player must be in to be eligible to participate in the finals
-FINALS_TIER_NAME = TIER_2_NAME
 
 TIER_0_STAY_BADGE = "A"
 TIER_1_STAY_BADGE = "B"

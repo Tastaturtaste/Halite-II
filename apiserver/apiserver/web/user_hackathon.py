@@ -86,7 +86,6 @@ def get_user_hackathons(intended_user):
 @web_api.route("/user/<int:intended_user>/hackathon", methods=["POST"])
 @util.cross_origin(methods=["GET", "POST"])
 @api_util.requires_login(accept_key=False)
-@api_util.requires_competition_open
 def associate_user_hackathon(intended_user, *, user_id):
     if user_id != intended_user:
         raise api_util.user_mismatch_error()

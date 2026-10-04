@@ -10,7 +10,7 @@ additional_css: ["built-codeEdit", "dark-codeEdit"]
 ---
 
 <p>
-Welcome to the Halite II closed Two Sigma alpha competition!
+Welcome to the Halite II Two Sigma competition!
 You can use the editor below to write your bot.
 We've provided a sample bot skeleton to get you started.
 Read the comments for descriptions and hints.

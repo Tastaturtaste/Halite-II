@@ -6,7 +6,7 @@ import datetime
 import flask
 import sqlalchemy
 
-from .. import config, model, util
+from .. import model, util
 
 from . import match as match_api
 from . import challenge as challenge_api
@@ -70,7 +70,6 @@ def list_user_challenge_matches(intended_user, challenge_id):
 @web_api.route("/user/<int:intended_user>/challenge", methods=["POST"])
 @util.cross_origin(methods=["GET", "POST"])
 @api_util.requires_login(accept_key=False)
-@api_util.requires_competition_open
 def create_challenge(intended_user, *, user_id):
     if user_id != intended_user:
         raise api_util.user_mismatch_error()
@@ -84,9 +83,6 @@ def create_challenge(intended_user, *, user_id):
         raise util.APIError(400, message="You can't challenge yourself.")
     if len(opponents) not in (1, 3):
         raise util.APIError(400, message="Must provide 1 or 3 opponents.")
-
-    if config.COMPETITION_FINALS_PAIRING:
-        raise util.APIError(400, message="Sorry, challenges are closed for the competition finals.")
 
     with model.engine.connect() as conn:
         sqlfunc = sqlalchemy.sql.func
