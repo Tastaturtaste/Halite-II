@@ -1,4 +1,0 @@
-# Local dev overrides; merged via `bundle exec jekyll serve --config _config.yml,_config.dev.yml`.
-api_server_url: "http://localhost:5000/v1/api"
-login_server_url: "http://localhost:5000/v1/login"
-logout_server_url: "http://localhost:5000/v1/logout/"
