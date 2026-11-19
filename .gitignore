@@ -486,6 +486,7 @@ compiled_environments/
 
 CMakeFiles/
 CMakeCache.txt
+CMakeUserPresets.json
 cmake_install.cmake
 cmake-build-*/
 environment/Makefile

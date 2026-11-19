@@ -1,5 +1,5 @@
 #include "Replay.hpp"
-#include "../version.hpp"
+#include "version.hpp"
 
 /**
  * Build up the in-memory representation of the header of the replay.

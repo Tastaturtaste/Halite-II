@@ -1,54 +1,106 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.21)
 
-project(environment)
+project(environment LANGUAGES C CXX)
+
+# ---------------------------------------------------------------------------
+# Build options
+# ---------------------------------------------------------------------------
+option(HALITE_STATIC_RUNTIME
+       "Link the C/C++ runtime statically where the platform supports it"
+       ON)
+
+# Use a sensible default when configured without a preset.
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Build type" FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+                 Debug Release RelWithDebInfo MinSizeRel)
+endif()
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -Wall -Wno-sign-compare -Wno-unused-function -pedantic")
-
-# versions of cmake before 3.4 always link with -rdynamic on linux, which breaks static linkage with clang
-# unfortunately travis right now only has cmake 3.2, so have to do this workaround for now
-set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS "")
-set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS "")
-
-include_directories(${CMAKE_SOURCE_DIR}/core)
-include_directories(${CMAKE_SOURCE_DIR}/core/mapgen)
-include_directories(${CMAKE_SOURCE_DIR}/networking)
-include_directories(${CMAKE_SOURCE_DIR}/tclap)
-include_directories(${CMAKE_SOURCE_DIR}/zstd-1.3.0/lib)
-include_directories(${CMAKE_SOURCE_DIR}/zstd-1.3.0/lib/common)
-include_directories(${CMAKE_SOURCE_DIR}/zstd-1.3.0/lib/compress)
-include_directories(${CMAKE_SOURCE_DIR}/zstd-1.3.0/lib/decompress)
-include_directories(${CMAKE_SOURCE_DIR}/zstd-1.3.0/lib/deprecated)
-include_directories(${CMAKE_SOURCE_DIR}/zstd-1.3.0/lib/dictBuilder)
-include_directories(${CMAKE_SOURCE_DIR}/zstd-1.3.0/lib/legacy)
-
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-
-add_custom_target(VERSION_CHECK
-    ./set_version.sh
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
-foreach(dir ${dirs})
-    file(GLOB_RECURSE SOURCE ${dir}/*.[ch]*)
-    set(SOURCE_FILES "${SOURCE_FILES}" ${SOURCE})
-endforeach()
-
-include_directories(${CMAKE_SOURCE_DIR})
-set(SOURCE_FILES "${SOURCE_FILES}" main.cpp)
-
-add_executable(halite ${SOURCE_FILES})
-
-add_dependencies(halite VERSION_CHECK)
-
-if (APPLE)
-    # No static linkage here - https://stackoverflow.com/questions/5259249/creating-static-mac-os-x-c-build
-    target_link_libraries(halite pthread)
-else()
-    # On Linux, make sure to link using the whole-archive option
-    # See: https://stackoverflow.com/questions/35116327
-    target_link_libraries(halite -Wl,--whole-archive pthread -Wl,--no-whole-archive -static)
+# Match the historical Windows build (/MT) while allowing dynamic linking.
+if(MSVC AND HALITE_STATIC_RUNTIME)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY
+        "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
+
+# ---------------------------------------------------------------------------
+# Version header
+# ---------------------------------------------------------------------------
+set(HALITE_VERSION "" CACHE STRING
+    "Override the engine version (defaults to git describe)")
+
+if(NOT HALITE_VERSION)
+    find_package(Git QUIET)
+    if(Git_FOUND)
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" describe --abbrev=3 --tags HEAD
+            WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+            RESULT_VARIABLE _halite_git_result
+            OUTPUT_VARIABLE _halite_git_version
+            ERROR_QUIET
+            OUTPUT_STRIP_TRAILING_WHITESPACE)
+        if(_halite_git_result EQUAL 0 AND _halite_git_version)
+            string(REPLACE "-" "." HALITE_VERSION "${_halite_git_version}")
+            string(REGEX REPLACE "^v" "" HALITE_VERSION "${HALITE_VERSION}")
+        endif()
+    endif()
+endif()
+
+if(NOT HALITE_VERSION)
+    set(HALITE_VERSION "0.0.0")
+endif()
+
+message(STATUS "Halite version: ${HALITE_VERSION}")
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/generated/version.hpp"
+    @ONLY)
+
+# ---------------------------------------------------------------------------
+# Dependencies
+# ---------------------------------------------------------------------------
+find_package(Threads REQUIRED)
+
+# ---------------------------------------------------------------------------
+# Halite
+# ---------------------------------------------------------------------------
+add_executable(halite main.cpp)
+
+target_include_directories(halite PRIVATE
+    "${CMAKE_CURRENT_BINARY_DIR}/generated"
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core"
+    "${CMAKE_CURRENT_SOURCE_DIR}/core/mapgen"
+    "${CMAKE_CURRENT_SOURCE_DIR}/networking")
+
+if(MSVC)
+    target_compile_definitions(halite PRIVATE
+        _LIBCPP_COMPILER_MSVC=1
+        _CRT_SECURE_NO_WARNINGS)
+    target_compile_options(halite PRIVATE /W2)
+else()
+    target_compile_options(halite PRIVATE
+        -Wall
+        -Wno-sign-compare
+        -Wno-unused-function
+        -pedantic)
+endif()
+
+if(WIN32)
+    target_compile_definitions(halite PRIVATE NOMINMAX)
+endif()
+
+if(HALITE_STATIC_RUNTIME AND NOT MSVC AND NOT APPLE)
+    target_link_options(halite PRIVATE -static)
+endif()
+
+# Each source directory adds its files to the halite target.
+add_subdirectory(tclap)
+add_subdirectory(zstd-1.3.0)
+add_subdirectory(core)
+add_subdirectory(networking)
+
+target_link_libraries(halite PRIVATE zstd tclap Threads::Threads)
