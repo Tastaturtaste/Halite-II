@@ -1,0 +1,104 @@
+@use "./variables" as *;
+
+// Adapted from the original _footer.scss (Bootstrap nav markup replaced by a
+// simple flex list, same typography and palette).
+
+.footer {
+  flex-shrink: 0;
+  color: $foreground-2;
+  background-color: rgba(18, 17, 25, 0.75);
+  border-top: 1px solid $border;
+  padding: 28px 0 22px;
+
+  a {
+    color: $foreground-2;
+
+    &.base-link {
+      color: $yellow;
+      text-decoration: none;
+      cursor: pointer;
+
+      &:hover {
+        color: $yellow-hover;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .footer-nav,
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 26px;
+    margin: 0 0 22px;
+    padding: 0 0 22px;
+    list-style: none;
+    border-bottom: 1px solid $border;
+    font-family: $font-headline;
+    font-size: 1.9rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    li {
+      display: block;
+    }
+
+    a {
+      display: block;
+      padding: 2px 0;
+
+      &:hover {
+        color: $yellow;
+      }
+    }
+
+    @media (max-width: $screen-xs-max) {
+      li {
+        flex: 0 0 100%;
+        text-align: center;
+      }
+    }
+  }
+
+  .footer-below {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .footer-copy {
+    text-align: center;
+
+    &-logo {
+      display: block;
+      max-width: 150px;
+      margin: 0 auto 8px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1.4rem;
+      opacity: 0.8;
+    }
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 18px;
+    font-size: 1.4rem;
+
+    a:hover {
+      color: $yellow;
+    }
+  }
+
+  @media (max-width: $screen-sm-max) {
+    .footer-below {
+      justify-content: center;
+      text-align: center;
+    }
+  }
+}

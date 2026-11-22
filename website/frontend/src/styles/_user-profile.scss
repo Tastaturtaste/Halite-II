@@ -1,0 +1,178 @@
+@use "./variables" as *;
+
+// Adapted from _user-profile.scss: player/bot stat blocks and profile sections.
+
+.user-profile {
+  position: relative;
+  margin-top: 40px;
+
+  h1,
+  h2,
+  h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+  }
+
+  h2 {
+    margin-bottom: 15px;
+    font-family: $font-heading;
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  a {
+    color: $yellow;
+
+    &:hover {
+      color: $yellow-hover;
+      text-decoration: underline;
+    }
+  }
+
+  &-detail {
+    position: relative;
+    padding: 10px 0;
+    opacity: 0.8;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    text-align: center;
+
+    h1 {
+      font-family: $font-heading;
+      font-size: 28px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  &-rank {
+    position: relative;
+    padding: 20px 10px 10px 20px;
+    text-align: center;
+
+    .highest-rank {
+      color: #63ceca;
+    }
+  }
+
+  &-rank-stats {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+
+    .stats-item {
+      flex: 1;
+      margin: 0 15px;
+
+      h3 {
+        font-family: $font-body;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+        color: #c2d1d0;
+        text-align: center;
+      }
+
+      p {
+        margin: 0;
+        font-family: $font-heading;
+        font-size: 36px;
+        letter-spacing: 1px;
+        color: $foreground;
+      }
+    }
+  }
+
+  &-about {
+    position: relative;
+    padding: 20px 0;
+    text-align: center;
+
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.user-profile-avatar {
+  text-align: center;
+
+  img {
+    display: inline;
+    max-width: 160px;
+    max-height: 161px;
+
+    @media (min-width: $screen-md-min) {
+      max-width: 229px;
+      max-height: 230px;
+    }
+  }
+}
+
+.user-profile-detail .user-name {
+  font-family: $font-heading;
+  font-size: 35px;
+}
+
+.stats-1-section {
+  position: relative;
+  margin-top: 30px;
+  padding: 20px 0;
+
+  h3 {
+    margin-top: 0;
+  }
+}
+
+.profile-section {
+  position: relative;
+  padding: 20px 0;
+
+  h2 {
+    position: relative;
+    display: block;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    font-family: $font-heading;
+    font-size: 2.4rem;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+  }
+
+  a {
+    color: $yellow;
+
+    &:hover {
+      color: $yellow-hover;
+      text-decoration: underline;
+    }
+  }
+
+  .section-empty {
+    text-align: center;
+
+    h2 {
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-bottom: 30px;
+      color: #c2d1d0;
+    }
+  }
+}
+
+.tab-container {
+  margin: 40px 0 0 40px;
+
+  @media (max-width: $screen-xs-max) {
+    margin: 40px 5px 0;
+  }
+}

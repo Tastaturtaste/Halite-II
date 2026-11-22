@@ -1,0 +1,114 @@
+@use "./variables" as *;
+
+// Ported almost verbatim from _table.scss; only the Bootstrap dependencies were
+// removed. These classes are used by the starter kits and bot stats pages.
+
+.table-leader {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.5rem;
+
+  > thead > tr > th,
+  > tbody > tr > td {
+    padding: 8px 15px;
+    vertical-align: top;
+    border-top: 0;
+    border-bottom: 0;
+    text-align: left;
+  }
+
+  > thead > tr,
+  > tbody > tr {
+    border-top: 1px solid #363347;
+    border-bottom: 1px solid #363347;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+  }
+
+  > thead > tr > th + th,
+  > tbody > tr > td + td {
+    border-left: 1px solid #363347;
+  }
+
+  > thead > tr > th {
+    background-color: #100f17;
+    color: $foreground;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  > tbody > tr > td {
+    background-color: #1c1a27;
+  }
+
+  > tbody > tr:hover > td {
+    background-color: #24222f;
+  }
+
+  a {
+    color: $yellow;
+
+    &:hover {
+      color: $yellow-hover;
+    }
+  }
+
+  > tbody > tr.hl {
+    td {
+      border-top: 1px solid $yellow;
+      border-bottom: 1px solid $yellow;
+    }
+
+    td:first-child {
+      border-left: 1px solid $yellow;
+    }
+
+    td:last-child {
+      border-right: 1px solid $yellow;
+    }
+  }
+
+  .hide-mobile {
+    @media (max-width: $screen-sm-max) {
+      display: none;
+    }
+  }
+
+  .nowrap {
+    white-space: nowrap;
+  }
+}
+
+.table-sticky-container {
+  position: relative;
+
+  .table-wrapper {
+    overflow-y: auto;
+    overflow-x: auto;
+    max-height: 500px;
+  }
+
+  .table {
+    margin: 0;
+  }
+}
+
+.info-icon {
+  font-size: 16px;
+  margin-top: 5px;
+  min-width: 40px;
+}
+
+.info-icon-trophy {
+  font-size: 14px;
+  min-width: 20px;
+  display: inline-block;
+  vertical-align: middle;
+  color: #e37222;
+}
+
+.warning {
+  color: #e37222;
+}

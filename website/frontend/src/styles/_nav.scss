@@ -1,0 +1,109 @@
+@use "./variables" as *;
+
+// Ported from the original _nav.scss. The old breadcrumb arrow image is gone;
+// a CSS chevron keeps the same visual rhythm without an extra asset.
+
+.breadcrumb {
+  list-style: none;
+  margin: 15px 0;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-family: $font-headline;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  li {
+    display: inline-flex;
+    align-items: center;
+
+    &:not(:last-child)::after {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin: 0 12px;
+      border-right: 1px solid $foreground-2;
+      border-bottom: 1px solid $foreground-2;
+      transform: rotate(-45deg);
+    }
+
+    a,
+    > span {
+      display: block;
+      padding: 0 4px;
+      color: $yellow;
+    }
+  }
+}
+
+.list-ha {
+  padding-left: 0;
+  list-style: none;
+
+  > li {
+    display: block;
+    position: relative;
+
+    > a,
+    > span {
+      padding: 10px 0;
+      display: block;
+      font-size: 14px;
+      line-height: 1.3em;
+      color: $foreground;
+      text-transform: uppercase;
+      text-decoration: none;
+
+      > span {
+        padding: 5px 15px;
+        display: inline-block;
+      }
+    }
+
+    > a:hover > span,
+    &.active > a > span {
+      background: rgba(255, 190, 0, 0.1);
+      color: $yellow;
+      text-decoration: none;
+    }
+  }
+}
+
+.sub-list-ha {
+  padding-left: 35px;
+  padding-bottom: 10px;
+  list-style: none;
+
+  li {
+    display: block;
+    position: relative;
+
+    &::before {
+      content: "\25CF";
+      position: absolute;
+      left: -20px;
+      top: 1px;
+      color: $foreground;
+    }
+
+    a {
+      display: block;
+      font-size: 13px;
+      color: $foreground;
+      letter-spacing: 1px;
+      padding: 5px 0;
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+
+    &.active a,
+    &.active::before,
+    &:hover a,
+    &:hover::before {
+      color: $yellow;
+    }
+  }
+}

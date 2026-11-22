@@ -1,0 +1,59 @@
+// Adapted from the original _mixins.scss: the corner-line decoration used
+// across Halite II headings and panels.
+
+@mixin line() {
+  $line-color: #889295;
+  position: absolute;
+  width: 100%;
+  display: block;
+  background-color: $line-color;
+  height: 1px;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background-color: $line-color;
+    border-radius: 3px;
+  }
+
+  &::before {
+    top: -1px;
+    left: -2px;
+  }
+
+  &::after {
+    top: -1px;
+    right: -2px;
+  }
+}
+
+@mixin line-top() {
+  @include line();
+  top: 0;
+  left: 0;
+}
+
+@mixin line-bottom() {
+  @include line();
+  bottom: 0;
+  left: 0;
+}
+
+@mixin corner-dot($color: #889295) {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 3px;
+  position: absolute;
+  background-color: $color;
+}
+
+@mixin highlight-bg() {
+  padding: 5px 15px;
+  color: #ffbe00;
+  background-color: rgba(255, 190, 0, 0.1);
+}

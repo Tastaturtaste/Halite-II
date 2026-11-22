@@ -1,0 +1,150 @@
+@use "./variables" as *;
+
+// Adapted from _buttons.scss. The original button artwork is replaced by CSS
+// shapes so the look survives without the missing register/button PNGs.
+
+.btn {
+  position: relative;
+  display: inline-block;
+  border: 0;
+  padding: 0 10px;
+  border-radius: 0;
+  background-color: transparent;
+  color: $dark-gray !important;
+  font-family: $font-headline;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 36px;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+
+  > span {
+    display: block;
+    height: 36px;
+    padding: 0 10px;
+    background-color: $yellow;
+    line-height: 36px;
+  }
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 18px solid transparent;
+    border-bottom: 18px solid transparent;
+  }
+
+  &::before {
+    left: 0;
+    border-right: 10px solid $yellow;
+  }
+
+  &::after {
+    right: 0;
+    border-left: 10px solid $yellow;
+  }
+
+  &:hover,
+  &:focus {
+    color: $dark-gray !important;
+    text-decoration: none;
+  }
+
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.btn-sm {
+  line-height: 34px;
+
+  > span {
+    height: 34px;
+    line-height: 34px;
+  }
+
+  &::before,
+  &::after {
+    border-top-width: 17px;
+    border-bottom-width: 17px;
+  }
+}
+
+// Secondary "flat" button in the original Halite II yellow.
+.btn-ha {
+  display: inline-block;
+  min-width: 160px;
+  height: 38px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 0;
+  background-color: $yellow;
+  color: $dark-gray !important;
+  font-family: $font-headline;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  line-height: 38px;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+
+  &:hover,
+  &:focus {
+    background-color: $yellow-hover;
+    color: $dark-gray !important;
+    text-decoration: none !important;
+    box-shadow: none;
+  }
+
+  &-lg {
+    height: 55px;
+    min-width: 234px;
+    font-size: 24px;
+    line-height: 55px;
+  }
+
+  &-clear {
+    background-color: transparent;
+    border: 1px solid $yellow;
+    color: $yellow !important;
+
+    &:hover {
+      background-color: rgba(255, 190, 0, 0.1);
+      color: $yellow !important;
+    }
+  }
+
+  &:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.btn-join {
+  display: inline-block;
+  width: 190px;
+  height: 55px;
+  background-image: url("../assets/images/btn-join.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 0;
+  cursor: pointer;
+  text-indent: -9999px;
+  overflow: hidden;
+}

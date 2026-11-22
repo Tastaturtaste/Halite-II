@@ -2,3 +2,21 @@
 cmake = "latest"
 ninja = "latest"
 node = "26"
+# Not managing rust with mise, because then rust-analyzer fails to find sysroot. 
+
+[tasks.install]
+run = "npm --prefix website/frontend install"
+
+[tasks.backend]
+run = "cargo run --manifest-path website/backend/Cargo.toml"
+
+[tasks.frontend]
+depends = ["install"]
+run = "npm --prefix website/frontend run dev"
+
+[tasks.build]
+depends = ["install"]
+run = """
+cargo build --release --manifest-path website/backend/Cargo.toml
+npm --prefix website/frontend run build
+"""

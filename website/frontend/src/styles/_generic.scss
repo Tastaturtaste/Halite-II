@@ -1,0 +1,362 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+// The original Jekyll site used a full-bleed space photograph. We keep the same
+// mood with a CSS-only dark gradient (no large image dependency).
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%; // 1rem = 10px, matching the original rem sizing
+  min-height: 100%;
+  background-color: #15141c;
+  background-image: radial-gradient(
+    circle at 50% 0%,
+    #2e2c3d 0%,
+    #1d1b28 45%,
+    #121119 100%
+  );
+  background-attachment: fixed;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: $font-body;
+  font-size: 1.6rem;
+  line-height: 1.5;
+  background-color: transparent;
+  color: $foreground;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.site-main {
+  flex: 1 0 auto;
+  padding-bottom: 60px;
+}
+
+a {
+  color: #ffbe00;
+  text-decoration: none;
+
+  &:hover {
+    color: $yellow;
+  }
+}
+
+.hl {
+  color: #ffbe00;
+}
+
+h1,
+h2,
+h3 {
+  margin-top: 0;
+  letter-spacing: 1px;
+  font-family: $font-display;
+  font-weight: 400;
+  color: $foreground;
+}
+
+h1 {
+  font-size: 3.6rem;
+}
+
+h2 {
+  font-size: 2.8rem;
+}
+
+h3 {
+  font-size: 2.2rem;
+}
+
+p {
+  margin-top: 0;
+}
+
+.container {
+  width: 100%;
+  max-width: 1170px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  @media (min-width: $screen-llg-min) {
+    max-width: 1380px;
+  }
+}
+
+.page-header {
+  margin-top: 40px;
+  margin-bottom: 30px;
+  border-bottom: 0;
+  position: relative;
+
+  h1,
+  .h1 {
+    font-family: $font-display;
+    font-size: 3.6rem;
+    letter-spacing: 2px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .xline {
+    max-width: 150px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+.page-description {
+  text-align: center;
+  padding: 30px 0;
+  opacity: 0.8;
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+}
+
+.line-container {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  width: 25%;
+
+  &-sm {
+    width: 10%;
+  }
+}
+
+.xline {
+  @include line();
+
+  &-top {
+    @include line-top();
+  }
+
+  &-bottom {
+    @include line-bottom();
+  }
+}
+
+.xline-container .xline {
+  width: 100%;
+}
+
+.bt {
+  border-top: 1px solid #889295;
+}
+
+.bb {
+  border-bottom: 1px solid #889295;
+}
+
+.bl {
+  border-left: 1px solid #889295;
+}
+
+.br {
+  border-right: 1px solid #889295;
+}
+
+.dot-tl,
+.dot-tr,
+.dot-bl,
+.dot-br {
+  @include corner-dot();
+}
+
+.dot-tl {
+  top: -2.5px;
+  left: -2.5px;
+}
+
+.dot-tr {
+  top: -2.5px;
+  right: -2.5px;
+}
+
+.dot-bl {
+  bottom: -1.5px;
+  left: -2.5px;
+}
+
+.dot-br {
+  bottom: -1.5px;
+  right: -2.5px;
+}
+
+.bg-player-1,
+.bg-1 {
+  background-color: $player-1;
+}
+
+.bg-player-2,
+.bg-2 {
+  background-color: $player-2;
+}
+
+.bg-player-3,
+.bg-3 {
+  background-color: $player-3;
+}
+
+.bg-player-4,
+.bg-4 {
+  background-color: $player-4;
+}
+
+.color-1 {
+  color: $player-1 !important;
+}
+
+.color-2 {
+  color: $player-2 !important;
+}
+
+.color-3 {
+  color: $player-3 !important;
+}
+
+.color-4 {
+  color: $player-4 !important;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  line-height: 14px;
+}
+
+.noselect {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.font-headline {
+  font-family: $font-headline !important;
+}
+
+.font-display {
+  font-family: $font-display !important;
+}
+
+.message-box {
+  text-align: center;
+
+  p {
+    margin-bottom: 0;
+  }
+
+  p + p {
+    margin-bottom: 10px;
+  }
+}
+
+.status-message {
+  text-align: center;
+
+  .message-top {
+    margin-top: -30px;
+  }
+}
+
+.container-empty {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.container-loaded {
+  opacity: 1;
+}
+
+.table-container {
+  @media (max-width: $screen-sm-min) {
+    overflow-x: auto;
+  }
+}
+
+// Hexagon bullets and text ornaments from the original generic partial.
+.hex-li {
+  display: flex;
+  align-items: center;
+
+  .hex-bullet {
+    display: inline-block;
+    flex: 0 0 71px;
+    width: 71px;
+    height: 84px;
+    line-height: 83px;
+    text-align: center;
+    font-family: $font-heading;
+    font-size: 36px;
+    color: $yellow;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
+    background-image: url("../assets/images/hexagon.svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    margin-right: 10px;
+  }
+}
+
+.ha-text {
+  display: inline-block;
+  padding: 10px 25px;
+  position: relative;
+  font-family: $font-heading;
+  font-size: 24px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.ha-checkbox {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  background-color: #33313d;
+  border: 1px solid $foreground;
+  padding: 3px;
+  vertical-align: middle;
+
+  span {
+    background-color: transparent;
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+  }
+
+  &-checked {
+    border-color: $yellow;
+
+    span {
+      background-color: $yellow;
+    }
+  }
+}
+
+// Common inner form controls, ported from the old site's form styling.
+input,
+select,
+textarea {
+  font-family: $font-body;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}

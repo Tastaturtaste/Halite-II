@@ -1,0 +1,278 @@
+@use "./variables" as *;
+
+// Adapted from _visuallizer.scss (sic): headings and replay chrome for the
+// visualizer page. The interactive canvas/player itself is out of scope.
+
+.visuallizer-container {
+  padding-top: 20px;
+}
+
+.visuallizer-loading-message {
+  padding: 20px 0;
+  text-align: center;
+}
+
+.game-heading {
+  position: relative;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  text-align: center;
+
+  .xline {
+    background-color: #474951;
+
+    &::after,
+    &::before {
+      background-color: #474951;
+    }
+  }
+
+  &-date {
+    margin-bottom: 5px;
+    color: $foreground-2;
+    font-size: 1.5rem;
+  }
+
+  &-players {
+    display: flex;
+    justify-content: center;
+    gap: 9px;
+    font-family: $font-heading;
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: $foreground;
+    text-align: center;
+    text-shadow: 0 2px 30px rgba(0, 0, 0, 0.2);
+    text-transform: uppercase;
+
+    .player {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.xline-left {
+  position: absolute;
+  top: 30%;
+  left: 10px;
+  display: block;
+  width: 1px;
+  height: 30%;
+  background-color: #889295;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 3px;
+    background-color: #889295;
+  }
+
+  &::before {
+    top: -2px;
+    left: -1px;
+  }
+
+  &::after {
+    bottom: -2px;
+    left: -1px;
+  }
+}
+
+.xline-right {
+  position: absolute;
+  top: 30%;
+  right: 10px;
+  display: block;
+  width: 1px;
+  height: 30%;
+  background-color: #889295;
+
+  &::before,
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 3px;
+    background-color: #889295;
+  }
+
+  &::before {
+    top: -2px;
+    right: -1px;
+  }
+
+  &::after {
+    bottom: -2px;
+    right: -1px;
+  }
+}
+
+.game-replay {
+  position: relative;
+  padding: 15px 0;
+
+  > .xline {
+    top: 50%;
+    margin-top: -30px;
+    transform: translateY(-50%);
+  }
+
+  .game-replay-viewer {
+    padding: 20px 30px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .game-replay-container {
+    position: relative;
+    padding: 20px 30px;
+
+    .game-replay-viewer {
+      padding: 0;
+    }
+
+    .game-replay-expand {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      display: block;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  .game-replay-controller {
+    position: relative;
+    width: 100%;
+    user-select: none;
+
+    @media (min-width: $screen-sm-min) {
+      height: 60px;
+    }
+
+    .xline {
+      background-color: #474951;
+
+      &::after,
+      &::before {
+        background-color: #474951;
+      }
+    }
+
+    .game-replay-btn-table {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+
+      @media (min-width: $screen-sm-min) {
+        flex-wrap: nowrap;
+      }
+
+      .game-replay-btn-cell {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 10px 0;
+
+        @media (min-width: $screen-sm-min) {
+          flex: 0;
+          padding: 0 15px 0 0;
+        }
+
+        .replay-btn {
+          margin-right: 25px;
+
+          a {
+            display: inline-block;
+            width: 18px;
+            color: inherit;
+            text-decoration: none;
+
+            &:hover,
+            &:focus {
+              color: #fff;
+            }
+          }
+        }
+      }
+    }
+
+    .game-replay-progress {
+      flex: 1;
+      padding: 0 20px;
+    }
+
+    .game-replay-progress-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .game-replay-progress-bar {
+      flex: 1;
+      padding: 0 5px;
+    }
+
+    .game-replay-share {
+      width: 100px;
+      text-align: right;
+    }
+  }
+}
+
+.game-stats-widget {
+  .map-stats-props {
+    tbody > tr > th,
+    tbody > tr > td {
+      padding: 8px 0;
+    }
+
+    tbody > tr > th {
+      padding-right: 10px;
+      color: #b0bebe;
+
+      @media (min-width: $screen-sm-min) {
+        padding-right: 30px;
+      }
+    }
+
+    tbody > tr > td {
+      color: $foreground;
+    }
+  }
+}
+
+.player-line-chart {
+  display: block;
+
+  > svg {
+    display: block;
+  }
+}
+
+.player-name-anchor {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

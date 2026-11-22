@@ -1,0 +1,140 @@
+@use "./variables" as *;
+@use "./mixins" as *;
+
+// Adapted from the original _header.scss. The Jekyll/Angular navbar relied on
+// Bootstrap; this is the same look rebuilt with flexbox.
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: 61px;
+  background-color: $gray-bg;
+  border-bottom: 1px solid $border;
+  box-shadow: 0 2px 18px rgba(0, 0, 0, 0.35);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  height: 61px;
+  gap: 20px;
+}
+
+.navbar-brand,
+.brand {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0;
+  text-decoration: none;
+
+  img {
+    display: block;
+    width: 100px;
+    max-width: 100px;
+    height: auto;
+
+    @media (min-width: $screen-md-min) {
+      width: 150px;
+      max-width: 150px;
+    }
+  }
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  overflow-x: auto;
+  font-family: $font-headline;
+  font-size: 1.9rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  a {
+    position: relative;
+    display: block;
+    padding: 8px 10px;
+    color: $foreground-2;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+
+    &:hover {
+      color: $foreground;
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    &.router-link-active {
+      color: $yellow;
+      background-color: rgba(255, 190, 0, 0.1);
+    }
+  }
+}
+
+.auth-area {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 0 0 auto;
+  font-family: $font-headline;
+  font-size: 1.7rem;
+  letter-spacing: 1px;
+
+  .auth-email {
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: $foreground-2;
+    text-transform: none;
+
+    @media (max-width: $screen-xs-max) {
+      display: none;
+    }
+  }
+
+  .auth-link {
+    color: $yellow;
+    text-transform: uppercase;
+
+    &:hover {
+      color: $yellow-hover;
+    }
+  }
+
+  .auth-logout {
+    border: 0;
+    padding: 4px 10px;
+    background-color: transparent;
+    color: $foreground-2;
+    font-family: $font-headline;
+    font-size: 1.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover {
+      color: $yellow;
+      background-color: rgba(255, 190, 0, 0.1);
+    }
+  }
+}
+
+@media (max-width: $screen-xs-max) {
+  .nav-inner {
+    gap: 12px;
+  }
+
+  .main-nav {
+    font-size: 1.7rem;
+  }
+}

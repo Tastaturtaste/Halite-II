@@ -1,0 +1,32 @@
+// Halite II palette and typography, recovered from the original site (commit f79d9067).
+
+$gray-bg: #25242f;
+$dark-gray: #30242f;
+$foreground: #ecfffb;
+$foreground-2: #b9b8b8;
+$foreground-light: rgba(236, 255, 251, 0.5);
+$yellow: #ffbe00;
+$yellow-hover: #f1a703;
+$border: #474951;
+$blue: #298089;
+$blue-hover: #44a3e2;
+$error: #ff2d55;
+
+$player-1: #bd00db;
+$player-2: #63ceca;
+$player-3: #ffbe00;
+$player-4: #c5ec98;
+
+$font-heading: "Teko", "Arial Narrow", sans-serif;
+$font-headline: "Teko", "Arial Narrow", sans-serif;
+$font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-display: "Equinox", "Teko", sans-serif;
+
+// Bootstrap-era breakpoints kept for familiarity when porting the old partials.
+$screen-xs-max: 767px;
+$screen-sm-min: 768px;
+$screen-sm-max: 991px;
+$screen-md-min: 992px;
+$screen-md-max: 1199px;
+$screen-lg-min: 1200px;
+$screen-llg-min: 1400px;
